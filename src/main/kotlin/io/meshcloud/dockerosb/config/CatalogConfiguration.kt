@@ -1,29 +1,33 @@
-package io.meshcloud.dockerosb.service
+package io.meshcloud.dockerosb.config
 
 import io.meshcloud.dockerosb.persistence.GitHandler
 import io.meshcloud.dockerosb.persistence.YamlHandler
 import mu.KotlinLogging
 import org.springframework.cloud.servicebroker.model.catalog.Catalog
 import org.springframework.cloud.servicebroker.model.catalog.ServiceDefinition
-import org.springframework.cloud.servicebroker.service.CatalogService
-import org.springframework.stereotype.Service
-import reactor.core.publisher.Mono
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 
 private val log = KotlinLogging.logger { }
 
-@Service
-class GenericCatalogService(
+@Configuration
+class CatalogConfiguration(
     private val yamlHandler: YamlHandler,
     private val gitHandler: GitHandler
-) : CatalogService {
-  private var catalog: Catalog = parseCatalog(gitHandler, yamlHandler)
+) {
+
+  @Bean
+  fun catalog(): Catalog {
+    gitHandler.pull()
+
+    return parseCatalog(gitHandler, yamlHandler)
+  }
 
   private class YamlCatalog(
       val services: List<ServiceDefinition>
   )
 
   companion object {
-
     fun parseCatalog(gitHandler: GitHandler, yamlHandler: YamlHandler): Catalog {
       val statusYml = gitHandler.fileInRepo("catalog.yml")
 
@@ -32,35 +36,12 @@ class GenericCatalogService(
         return Catalog.builder().build()
       }
 
+
       val catalog = yamlHandler.readObject(statusYml, YamlCatalog::class.java)
+
       return Catalog.builder()
           .serviceDefinitions(catalog.services)
           .build()
     }
-  }
-
-  fun getLatestCatalog() {
-    gitHandler.pull()
-    this.catalog = parseCatalog(gitHandler, yamlHandler)
-  }
-
-  /**
-   * When ever the endpoint /v2/catalog is accessed  it pulls the catalog from the git repo
-   */
-  override fun getCatalog(): Mono<Catalog> {
-    getLatestCatalog()
-    return Mono.just(this.catalog)
-  }
-
-  /**
-   * used to provide Catalog object to be used by other services internally
-   */
-  fun getCatalogInternal(): Catalog {
-    getLatestCatalog()
-    return this.catalog
-  }
-
-  override fun getServiceDefinition(serviceId: String?): Mono<ServiceDefinition> {
-    TODO("Not yet implemented")
   }
 }

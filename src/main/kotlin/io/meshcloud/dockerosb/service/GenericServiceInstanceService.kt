@@ -5,6 +5,7 @@ import io.meshcloud.dockerosb.model.ServiceInstance
 import io.meshcloud.dockerosb.model.Status
 import io.meshcloud.dockerosb.persistence.GitHandler
 import io.meshcloud.dockerosb.persistence.YamlHandler
+import org.springframework.cloud.servicebroker.model.catalog.Catalog
 import org.springframework.cloud.servicebroker.model.instance.*
 import org.springframework.cloud.servicebroker.service.ServiceInstanceService
 import org.springframework.stereotype.Service
@@ -14,13 +15,11 @@ import reactor.core.publisher.Mono
 class GenericServiceInstanceService(
     private val yamlHandler: YamlHandler,
     private val gitHandler: GitHandler,
-    private val catalogService: GenericCatalogService
+    private val catalog: Catalog
 ) : ServiceInstanceService {
-
 
   override fun createServiceInstance(request: CreateServiceInstanceRequest): Mono<CreateServiceInstanceResponse> {
 
-    val catalog = catalogService.getCatalogInternal()
     if (catalog.isSynchronousService(request.serviceDefinitionId)) {
       return Mono.just(
           CreateServiceInstanceResponse.builder()
@@ -62,18 +61,18 @@ class GenericServiceInstanceService(
                     "conditionaltextarea" to "Any conditional text",
                     "dropdown" to "option2",
                     "array" to arrayOf(
-                        mapOf(
-                            "mapper" to "groups",
-                            "mapper_access_token" to false,
-                            "mapper_id_token" to true,
-                            "mapper_userinfo" to false
-                        ),
-                        mapOf(
-                            "mapper" to "duns",
-                            "mapper_access_token" to true,
-                            "mapper_id_token" to true,
-                            "mapper_userinfo" to true
-                        )
+                      mapOf(
+                        "mapper" to "groups",
+                        "mapper_access_token" to false,
+                        "mapper_id_token" to true,
+                        "mapper_userinfo" to false
+                      ),
+                      mapOf(
+                        "mapper" to "duns",
+                        "mapper_access_token" to true,
+                        "mapper_id_token" to true,
+                        "mapper_userinfo" to true
+                      )
                     )
                 )
             )
@@ -82,8 +81,6 @@ class GenericServiceInstanceService(
   }
 
   override fun getLastOperation(request: GetLastServiceOperationRequest): Mono<GetLastServiceOperationResponse> {
-
-    val catalog = catalogService.getCatalogInternal()
     if (catalog.isSynchronousService(request.serviceDefinitionId)) {
       return Mono.just(
           GetLastServiceOperationResponse.builder()
@@ -117,7 +114,6 @@ class GenericServiceInstanceService(
 
   override fun deleteServiceInstance(request: DeleteServiceInstanceRequest): Mono<DeleteServiceInstanceResponse> {
 
-    val catalog = catalogService.getCatalogInternal()
     if (catalog.isSynchronousService(request.serviceDefinitionId)) {
       return Mono.just(
           DeleteServiceInstanceResponse.builder()

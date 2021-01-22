@@ -31,7 +31,7 @@ class GenericServiceInstanceServiceTest {
   }
 
   private fun makeSut(): GenericServiceInstanceService {
-    return GenericServiceInstanceService(fixture.yamlHandler, fixture.gitHandler, fixture.catalogService)
+    return GenericServiceInstanceService(fixture.yamlHandler, fixture.gitHandler, fixture.catalog)
   }
 
   @Test
@@ -75,7 +75,7 @@ class GenericServiceInstanceServiceTest {
         .serviceInstanceId("e4bd6a78-7e05-4d5a-97b8-f8c5d1c710ab")
         .originatingIdentity(PlatformContext.builder().property("user", "unittester").build())
         .asyncAccepted(true)
-        .serviceDefinition(fixture.catalogService.getCatalogInternal().serviceDefinitions.first())
+        .serviceDefinition(fixture.catalog.serviceDefinitions.first())
         .build()
   }
 
