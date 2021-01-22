@@ -2,6 +2,7 @@ package io.meshcloud.dockerosb.model
 
 import org.springframework.cloud.servicebroker.model.Context
 import org.springframework.cloud.servicebroker.model.binding.CreateServiceInstanceBindingRequest
+import org.springframework.cloud.servicebroker.model.instance.CreateServiceInstanceRequest
 import javax.validation.constraints.NotEmpty
 
 data class ServiceBinding(
