@@ -1,4 +1,4 @@
-let UniPipe = ../UniPipe/package.dhall
+let UniPipe = ./package.dhall
 
 in    λ(instance : UniPipe.OSB.ServiceInstance)
     → λ(handler : UniPipe.InstanceHandler)

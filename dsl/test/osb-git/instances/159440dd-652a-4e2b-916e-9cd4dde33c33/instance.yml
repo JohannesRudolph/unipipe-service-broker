@@ -1,0 +1,114 @@
+---
+serviceInstanceId: "159440dd-652a-4e2b-916e-9cd4dde33c33"
+serviceDefinitionId: "d90c2b20-1d24-4592-88e7-6ab5eb147925"
+planId: "322909fb-4309-423b-ae7f-23a97587a89e"
+serviceDefinition:
+  id: "d90c2b20-1d24-4592-88e7-6ab5eb147925"
+  name: "Azure Cloud Functions as a Service (Teant Aware)"
+  description: "Order Azure Cloud Function for your Project"
+  plans:
+  - id: "322909fb-4309-423b-ae7f-23a97587a89e"
+    name: "Azure cloud function 1"
+    description: "Description what the Azure Cloud function does"
+    metadata:
+      bullets:
+      - "Azure function Magic"
+      - "Makes your project better"
+      costs:
+      - amount:
+          eur: 10.0
+        unit: "SETUP FEE"
+      displayName: "Azure Function 1"
+    schemas:
+      service_instance:
+        create:
+          parameters:
+            $schema: "http://json-schema.org/draft-04/schema#"
+            properties:
+              projectname:
+                description: "Parameter 1"
+                type: "string"
+              projectdescription:
+                description: "Parameter 2"
+                type: "string"
+            type: "object"
+        update:
+          parameters:
+            $schema: "http://json-schema.org/draft-04/schema#"
+            properties:
+              projectname:
+                description: "Parameter 1"
+                type: "string"
+              projectdescription:
+                description: "Parameter 2"
+                type: "string"
+            type: "object"
+    free: false
+  - id: "8d9ed5d4-d5d8-47ce-9799-aedd587a0890"
+    name: "Azure cloud function 2"
+    description: "Test Azure Function 2"
+    metadata:
+      bullets:
+      - "Azure function Magic"
+      - "Makes your project better"
+      costs:
+      - amount:
+          eur: 10.0
+        unit: "SETUP FEE"
+      displayName: "Azure Function 2"
+    schemas:
+      service_instance:
+        create:
+          parameters:
+            $schema: "http://json-schema.org/draft-04/schema#"
+            properties:
+              projectname:
+                description: "Parameter 1"
+                type: "string"
+              projectdescription:
+                description: "Parameter 2"
+                type: "string"
+            type: "object"
+        update:
+          parameters:
+            $schema: "http://json-schema.org/draft-04/schema#"
+            properties:
+              projectname:
+                description: "Parameter 1"
+                type: "string"
+              projectdescription:
+                description: "Parameter 2"
+                type: "string"
+            type: "object"
+    free: false
+  bindable: true
+  planUpdateable: false
+  tags:
+  - "azure"
+  - "cloudfunction"
+  metadata:
+    tenantAware: true
+    displayName: "Azure Cloud Functions"
+    imageUsrl: "https://azure.microsoft.com/svghandler/functions?width=600&height=315"
+    longDescription: "Azure Cloud Functions services"
+    providerDisplayName: "Azure"
+    documentationUrl: "https://docs.microsoft.com/en-us/azure/azure-functions/"
+    supportUrl: "https://docs.microsoft.com/en-us/azure/azure-functions/"
+  requires: []
+  dashboardClient: null
+originatingIdentity: !<PlatformContext>
+  platform: "meshmarketplace"
+  user_id: "502c9d14-db19-4e20-b71a-e3a0717bc0db"
+  user_euid: "partner@meshcloud.io"
+asyncAccepted: true
+parameters:
+  projectname: "a"
+  projectdescription: "b"
+context: !<PlatformContext>
+  platform: "meshmarketplace"
+  permission_url: null
+  project_id: "osb-dev"
+  auth_url: null
+  customer_id: "unipipe-osb-dev"
+  token_url: null
+deleted: false

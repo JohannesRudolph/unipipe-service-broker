@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Exit on all errors and undefined vars
+set -o errexit
+set -o errtrace
+set -o pipefail
+set -o nounset
+
+# enable globs
+shopt -s globstar
+
+doc() {
+    cat <<-EOF
+Runs the Unipipe pipeline dsl
+
+USAGE:
+  unipipe [command]
+
+COMMANDS:
+  transform [path osb-repo] [path out-repo]: transform a repository
+  help: show this help text
+
+EXAMPLES:
+  unipipe transform 
+    
+EOF
+}
+
+transform() {
+  local dir_osb="$1"
+  local dir_out="$2"
+
+  # loop over all instance.yml files
+  echo "Transforming service instances in $dir_osb"
+  for filename in "$dir_osb"/instances/*/instance.yml; do
+    # [ -f "$filename" ] || continue
+    echo "- processing $filename"
+
+    # local instance_yml
+    # instance_yml="$(yaml-to-dhall ./OSB/ServiceInstance.dhall < $filename)"
+    # dhall <<< "./runner.dhall $instance_yml ./handler.dhall"
+  done
+
+}
+
+main() {
+  local cmd
+  cmd="$1"
+
+  case $cmd in
+    help)
+      doc
+    ;;
+    transform)
+      transform "${@:2}"
+    ;;
+    *)
+      echo "Unknown command '$cmd'. Use help to display help text."
+      exit 1;
+    ;;
+  esac
+
+  exit 0;
+}
+
+if [[ $# == 0 ]]; then
+  echo "No command specified. Use help to display help text." 
+  exit 1;
+else
+  main "$@"
+fi
+
+

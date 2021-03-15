@@ -1,3 +1,27 @@
+# Unipipe Pipeline DSL
+
+The Unipipe pipeline DSL allows service developers to quickly implement CI/CD pipelines for common service scenarios
+like
+
+- generating and execute terraform
+- sending emails
+
+The pipeline DSL builds on [dhall](https://dhall-lang.org), a configuration language that is ideal for expressing
+configuration data and its transformation in a type-safe and predictable manner. The DSL requires only bash and the dhall binaries.
+This allows the pipeline to be easily run in any CI/CD systems that supports a bash script job like Jenkins, Azure DevOps, GitLab or GitHub actions.
+
+## Architecture
+
+The pipeline DSL transforms a checked out "OSB git" directory tree produced by the Unipipe service broker into a
+target directroy tree. Since this is usually some form of infrastructure as code (IaC) we call this the "IaC git".
+Typically that target directory tree is also a git repository (or even the same repositroy, but a different branch).
+
+```text
+OSB git -> pipeline dsl -> IaC git
+```
+
+## Hacking
+
 Generate a type definition from YAML
 
 ```bash

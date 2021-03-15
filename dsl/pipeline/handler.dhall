@@ -1,4 +1,4 @@
-let UniPipe = ../UniPipe/package.dhall
+let UniPipe = ./package.dhall
 
 in    { provision =
             λ(instance : UniPipe.OSB.ServiceInstance)
