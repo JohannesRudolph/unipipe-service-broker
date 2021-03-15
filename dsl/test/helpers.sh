@@ -6,7 +6,7 @@ set -o pipefail
 
 export TMPDIR_ROOT=$(mktemp -d /tmp/git-tests.XXXXXX)
 # ensure that tmp directories get cleaned up after tests
-trap "rm -rf $TMPDIR_ROOT" EXIT
+# trap "rm -rf $TMPDIR_ROOT" EXIT
 
 run() {
   export TMPDIR=$(mktemp -d ${TMPDIR_ROOT}/git-tests.XXXXXX)

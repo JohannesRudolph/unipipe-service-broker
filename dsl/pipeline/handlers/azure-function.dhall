@@ -1,13 +1,16 @@
+-- a fictitious sample handler that makes an azure function provide info about the last provisioned service instance
+-- using dhall's native text interpolation
+
 let ServiceInstance = ./ServiceInstance.dhall
 
-let AzureFunctionDirStructure =
+let DirLayout =
     -- compute an output directory tree compatible with dhall to-directory-tree command
     -- this is not necessarily pretty when looking at nested maps, but unfortunately there's not a better dhall native
     -- way for now
-      { functions : Text }
+      { lastprovisioned : Text }
 
 let provision =
       λ(instance : ServiceInstance) →
-        { functions = instance.serviceInstanceId } : AzureFunctionDirStructure
+        { lastprovisioned = "The last provisioned service instance id is ${instance.serviceInstanceId}" } : DirLayout
 
-in  { Dir = AzureFunctionDirStructure, provision }
+in  { DirLayout, provision }
