@@ -1,17 +1,13 @@
-let AzureDevOpsServiceInstance = ./ServiceInstance.dhall
+let ServiceInstance = ./ServiceInstance.dhall
 
-in  λ(instance : AzureDevOpsServiceInstance) →
-      let tree =
-          -- compute an output directory tree compatible with dhall to-directory-tree command
-          -- this is not necessarily pretty when looking at nested maps, but unfortunately there's not a better dhall native
-          -- way for now
-            { mapKey = "functions"
-            , mapValue =
-              [ { mapKey = instance.parameters.projectname
-                , mapValue =
-                  [ { mapKey = instance.serviceInstanceId, mapValue = "x" } ]
-                }
-              ]
-            }
+let AzureFunctionDirStructure =
+    -- compute an output directory tree compatible with dhall to-directory-tree command
+    -- this is not necessarily pretty when looking at nested maps, but unfortunately there's not a better dhall native
+    -- way for now
+      { functions : Text }
 
-      in  tree
+let provision =
+      λ(instance : ServiceInstance) →
+        { functions = instance.serviceInstanceId } : AzureFunctionDirStructure
+
+in  { Dir = AzureFunctionDirStructure, provision }
