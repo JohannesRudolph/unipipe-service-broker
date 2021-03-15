@@ -1,1 +1,0 @@
-{ OSB = ./OSB/package.dhall }

@@ -1,4 +1,5 @@
-{ asyncAccepted : Bool
+{ serviceInstanceId : Text
+, asyncAccepted : Bool
 , context :
     { auth_url : Optional Text
     , customer_id : Text
@@ -8,7 +9,9 @@
     , token_url : Optional Text
     }
 , deleted : Optional Bool
-, originatingIdentity : Optional { platform : Text, user_euid : Optional Text, user_id : Optional Text }
+, originatingIdentity :
+    Optional
+      { platform : Text, user_euid : Optional Text, user_id : Optional Text }
 , parameters : { projectdescription : Text, projectname : Text }
 , planId : Text
 , serviceDefinition :
@@ -35,6 +38,4 @@
     , requires : List <>
     , tags : List Text
     }
-, serviceDefinitionId : Text
-, serviceInstanceId : Text
 }
