@@ -1,26 +1,37 @@
 { asyncAccepted : Bool
-, context : Optional <>
-, deleted : Bool
-, originatingIdentity : { platform : Optional <>, user : Text }
-, parameters : {}
+, context :
+    { auth_url : Optional Text
+    , customer_id : Text
+    , permission_url : Optional Text
+    , platform : Text
+    , project_id : Text
+    , token_url : Optional Text
+    }
+, deleted : Optional Bool
+, originatingIdentity : Optional { platform : Text, user_euid : Optional Text, user_id : Optional Text }
+, parameters : { projectdescription : Text, projectname : Text }
 , planId : Text
 , serviceDefinition :
     { bindable : Bool
-    , dashboardClient : Optional <>
+    , dashboardClient : Optional Text
     , description : Text
     , id : Text
-    , metadata : {}
+    , metadata :
+        { displayName : Text
+        , documentationUrl : Text
+        , imageUrl : Text
+        , longDescription : Text
+        , providerDisplayName : Text
+        , supportUrl : Text
+        , tenantAware :
+            -- indicates this is a tenant-aware service supporting tenant bindings
+            Optional Bool
+        }
     , name : Text
     , planUpdateable : Bool
     , plans :
-        List
-          { description : Text
-          , free : Bool
-          , id : Text
-          , metadata : {}
-          , name : Text
-          , schemas : Optional <>
-          }
+        -- we ignore many common plan metadata for now in the schema, we can add more later
+        List { description : Optional Text, id : Text, name : Text }
     , requires : List <>
     , tags : List Text
     }

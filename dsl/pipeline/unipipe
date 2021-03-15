@@ -25,6 +25,8 @@ EXAMPLES:
 EOF
 }
 
+dhall_dir=$(dirname "$0")
+
 transform() {
   local dir_osb="$1"
   local dir_out="$2"
@@ -32,14 +34,21 @@ transform() {
   # loop over all instance.yml files
   echo "Transforming service instances in $dir_osb"
   for filename in "$dir_osb"/instances/*/instance.yml; do
-    # [ -f "$filename" ] || continue
     echo "- processing $filename"
 
-    # local instance_yml
-    # instance_yml="$(yaml-to-dhall ./OSB/ServiceInstance.dhall < $filename)"
-    # dhall <<< "./runner.dhall $instance_yml ./handler.dhall"
-  done
+    # Parse yml to dhall so we work with it. We use the following options for parsing
+    # --records-loose: ignore yml fields that are not specified in dhall, allowing us to only work with a well-known 
+    #                  subset of properties in dhall and ignoring everything else.
+    
+    local instance_dhall
+    instance_dhall="$(yaml-to-dhall --records-loose "$dhall_dir"/OSB/ServiceInstance.dhall < "$filename")"
+    
+    ## Execute the handler to determine the action to take
 
+    dhall to-directory-tree --output "$dir_out" <<< "$dhall_dir/runner.dhall $instance_dhall"
+    
+    ## Execute the handler action
+  done
 }
 
 main() {

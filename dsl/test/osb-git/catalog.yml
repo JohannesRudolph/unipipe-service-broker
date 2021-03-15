@@ -83,7 +83,7 @@ services:
     metadata:
       tenantAware: true
       displayName: "Azure Cloud Functions"
-      imageUsrl: "https://azure.microsoft.com/svghandler/functions?width=600&height=315"
+      imageUrl: "https://azure.microsoft.com/svghandler/functions?width=600&height=315"
       longDescription: "Azure Cloud Functions services"
       providerDisplayName: "Azure"
       documentationUrl: "https://docs.microsoft.com/en-us/azure/azure-functions/"
@@ -176,7 +176,7 @@ services:
     metadata:
       tenantAware: true
       displayName: "Azure Cloud Functions"
-      imageUsrl: "https://azure.microsoft.com/svghandler/functions?width=600&height=315"
+      imageUrl: "https://azure.microsoft.com/svghandler/functions?width=600&height=315"
       longDescription: "Azure Cloud Functions services"
       providerDisplayName: "Azure"
       documentationUrl: "https://docs.microsoft.com/en-us/azure/azure-functions/"

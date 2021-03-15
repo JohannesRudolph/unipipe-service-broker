@@ -1,5 +1,0 @@
-{
-  relativePath: Text,
-  content: Text
-}
-
