@@ -1,5 +1,4 @@
 import { parse } from "./yaml.ts";
-import { assertEquals } from "https://deno.land/std@0.90.0/testing/asserts.ts";
 
 export interface OsbServiceInstance {
   serviceInstanceId: string;
@@ -33,11 +32,12 @@ export interface OsbServiceInstanceStatus {
   description: string;
 }
 
-
-export interface ServiceInstance {
-  instance: OsbServiceInstance;
-  bindings: OsbServiceBinding[];
-  status: OsbServiceInstanceStatus | null;
+export class ServiceInstance {
+  constructor(
+    readonly instance: OsbServiceInstance,
+    readonly bindings: OsbServiceBinding[],
+    readonly status: OsbServiceInstanceStatus | null,
+  ) {}
 }
 
 /**
@@ -65,6 +65,11 @@ export async function tryParseYamlFile(path: string) {
   }
 }
 
+/**
+ * Reads an OSB service instance from the git repo structure
+ * @param path 
+ * @returns 
+ */
 export async function readInstance(path: string): Promise<ServiceInstance> {
   const instance = await parseYamlFile(
     `${path}/instance.yml`,
@@ -74,9 +79,9 @@ export async function readInstance(path: string): Promise<ServiceInstance> {
     | OsbServiceInstanceStatus
     | null;
 
-  return {
-    instance: instance,
-    bindings: [], // todo parse binding files, note that bindings have also a status file
-    status: status, // todo parse status file
-  };
+  return new ServiceInstance(
+    instance,
+    [], // todo parse binding files, note that bindings have also a status file
+    status, // todo parse status file
+  );
 }

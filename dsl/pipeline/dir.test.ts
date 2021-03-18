@@ -1,0 +1,63 @@
+import { assertEquals, withTempDir } from "./test-util.ts";
+import { Dir, path, write } from "./dir.ts";
+
+const dir: Dir = {
+  name: "x",
+  entries: [
+    {
+      name: "y",
+      entries: [
+        { name: "z", content: "1" },
+      ],
+    },
+  ],
+};
+
+async function assertContent(pathComponents: string[], expected: string) {
+  const result = await Deno.readTextFile(path.join(...pathComponents));
+
+  assertEquals(result, expected);
+}
+
+Deno.test(
+  "can write new trees",
+  async () =>
+    await withTempDir(async (tmp) => {
+      await write(dir, tmp);
+      
+      await assertContent([tmp, "x", "y", "z"], "1");
+    }),
+);
+
+Deno.test(
+  "can merge a tree into existing dir",
+  async () =>
+    await withTempDir(async (tmp) => {
+      await write(dir, tmp);
+
+      const merged: Dir = {
+        name: "x",
+        entries: [
+          {
+            name: "y",
+            entries: [
+              { name: "z", content: "-1" }, // update file content
+              { name: "zz", content: "2" }, // a new file in an existing dir
+            ],
+          },
+          {
+            name: "yy",
+            entries: [
+              { name: "zzz", content: "3" }, // a new dir and a new file
+            ],
+          },
+        ],
+      };
+
+      await write(merged, tmp);
+
+      await assertContent([tmp, "x", "y", "z"], "-1");
+      await assertContent([tmp, "x", "y", "zz"], "2");
+      await assertContent([tmp, "x", "yy", "zzz"], "3");
+    }),
+);
