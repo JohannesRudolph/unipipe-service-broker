@@ -1,57 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 # Exit on all errors and undefined vars
 set -o errexit
-set -o errtrace
-set -o pipefail
 set -o nounset
 
-# enable globs
-shopt -s globstar
-
-doc() {
-    cat <<-EOF
-Runs the Unipipe pipeline dsl
-
-USAGE:
-  unipipe [command]
-
-COMMANDS:
-  transform [path osb-repo] [path out-repo]: transform a repository
-  help: show this help text
-
-EXAMPLES:
-  unipipe transform 
-    
-EOF
-}
-
-script_dir=$(dirname "$0")
-
-main  () {
-  local cmd
-  cmd="$1"
-
-  case $cmd in
-    help)
-      doc
-    ;;
-    transform)
-      deno run --allow-read --allow-write "$script_dir/transform.ts" "${@:2}"
-    ;;
-    *)
-      echo "Unknown command '$cmd'. Use help to display help text."
-      exit 1;
-    ;;
-  esac
-
-  exit 0;
-}
-
-if [[ $# == 0 ]]; then
-  echo "No command specified. Use help to display help text." 
-  exit 1;
-else
-  main "$@"
-fi
-
+deno run --allow-read --allow-write  main.ts "$@"
 

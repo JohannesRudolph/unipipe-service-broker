@@ -1,13 +1,7 @@
+import { path } from "./deps.ts";
 import { Dir, write } from "./dir.ts";
-import { std } from "./deps.ts";
 import { MeshMarketplaceContext } from "./mesh.ts";
-import {
-  OsbServiceBinding,
-  OsbServiceInstance,
-  OsbServiceInstanceStatus,
-  readInstance,
-  ServiceInstance,
-} from "./osb.ts";
+import { readInstance, ServiceInstance } from "./osb.ts";
 
 interface InstanceHandler {
   readonly name: string;
@@ -45,14 +39,17 @@ class VpcHandler implements InstanceHandler {
   }
 }
 
-async function main(args: string[]) {
-  const [osbRepoPath, outRepoPath] = args;
+interface TransformArgs {
+  osbRepoPath: string;
+  outRepoPath: string;
+}
 
+export async function transform(args: TransformArgs) {
   const handlers: Record<string, InstanceHandler> = {
     "d90c2b20-1d24-4592-88e7-6ab5eb147925": new VpcHandler(),
   };
 
-  const instancesPath = std.path.join(osbRepoPath, "instances");
+  const instancesPath = path.join(args.osbRepoPath, "instances");
 
   // might be able to "parallelize" using Promise.all
   for await (const dir of Deno.readDir(instancesPath)) {
@@ -60,7 +57,7 @@ async function main(args: string[]) {
       continue;
     }
 
-    const ip = std.path.join(instancesPath, dir.name);
+    const ip = path.join(instancesPath, dir.name);
     const instance = await readInstance(ip);
 
     const handler = handlers[instance.instance.serviceDefinitionId];
@@ -75,9 +72,7 @@ async function main(args: string[]) {
 
     const tree = handler.handle(instance);
     if (tree) {
-      await write(tree, outRepoPath);
+      await write(tree, args.outRepoPath);
     }
   }
 }
-
-await main(Deno.args);
