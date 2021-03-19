@@ -1,7 +1,4 @@
-import * as stdPath from "https://deno.land/std@0.90.0/path/mod.ts";
-
-// re-export path
-export const path = stdPath;
+import { path } from "./deps.ts";
 
 export interface Dir {
   name: string;
@@ -17,7 +14,6 @@ function isFile(x: File | Dir): x is File {
   return !!(x as File).content;
 }
 
-
 function isDir(x: File | Dir): x is Dir {
   return !isFile(x);
 }
@@ -31,7 +27,7 @@ function isDir(x: File | Dir): x is Dir {
  */
 export async function write(currentDir: Dir, basePath: string) {
   const currentPath = path.join(basePath, currentDir.name);
-  
+
   // ensure dir exists, mkdir -p
   await Deno.mkdir(currentPath, { recursive: true });
 

@@ -1,5 +1,7 @@
-import { assertEquals, withTempDir } from "./test-util.ts";
-import { Dir, path, write } from "./dir.ts";
+import { path } from "./deps.ts";
+import { assertEquals } from "./dev_deps.ts";
+import { Dir, write } from "./dir.ts";
+import { withTempDir } from "./test-util.ts";
 
 const dir: Dir = {
   name: "x",
@@ -24,7 +26,7 @@ Deno.test(
   async () =>
     await withTempDir(async (tmp) => {
       await write(dir, tmp);
-      
+
       await assertContent([tmp, "x", "y", "z"], "1");
     }),
 );

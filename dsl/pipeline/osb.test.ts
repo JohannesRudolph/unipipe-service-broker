@@ -1,6 +1,6 @@
 
 import { parseYamlFile, tryParseYamlFile } from "./osb.ts";
-import { assertEquals } from "./test-util.ts";
+import { assertEquals } from "./dev_deps.ts";
 
 Deno.test("parseYamlFile works", async () => {
   const tmp = await Deno.makeTempFile();

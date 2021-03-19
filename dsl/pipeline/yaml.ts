@@ -1,22 +1,14 @@
-import {
-  DEFAULT_SCHEMA,
-  parse as parseYaml,
-  ParseOptions,
-} from "https://deno.land/std@0.90.0/encoding/yaml.ts";
+import { yaml, YamlSchema, YamlType } from "./deps.ts";
 
-// note: it's a bit ugly that we have to foray into the private parts of the stdlib, but otherwise we can't configure
-import { Type } from "https://deno.land/std@0.90.0/encoding/_yaml/type.ts";
-import { Schema } from "https://deno.land/std@0.90.0/encoding/_yaml/schema.ts";
-
-const PlatformContextType = new Type("PlatformContext", {
+const PlatformContextType = new YamlType("PlatformContext", {
   kind: "mapping",
 });
 
-const OSB_SCHEMA = new Schema({
+const OSB_SCHEMA = new YamlSchema({
   explicit: [PlatformContextType],
-  include: [DEFAULT_SCHEMA],
+  include: [yaml.DEFAULT_SCHEMA],
 });
 
-export function parse(content: string, options?: ParseOptions): unknown {
-  return parseYaml(content, options || { schema: OSB_SCHEMA });
+export function parse(content: string, options?: yaml.ParseOptions): unknown {
+  return yaml.parse(content, options || { schema: OSB_SCHEMA });
 }

@@ -1,4 +1,5 @@
-import { Dir, path, write } from "./dir.ts";
+import { Dir, write } from "./dir.ts";
+import { std } from "./deps.ts";
 import { MeshMarketplaceContext } from "./mesh.ts";
 import {
   OsbServiceBinding,
@@ -51,7 +52,7 @@ async function main(args: string[]) {
     "d90c2b20-1d24-4592-88e7-6ab5eb147925": new VpcHandler(),
   };
 
-  const instancesPath = path.join(osbRepoPath, "instances");
+  const instancesPath = std.path.join(osbRepoPath, "instances");
 
   // might be able to "parallelize" using Promise.all
   for await (const dir of Deno.readDir(instancesPath)) {
@@ -59,7 +60,7 @@ async function main(args: string[]) {
       continue;
     }
 
-    const ip = path.join(instancesPath, dir.name);
+    const ip = std.path.join(instancesPath, dir.name);
     const instance = await readInstance(ip);
 
     const handler = handlers[instance.instance.serviceDefinitionId];
