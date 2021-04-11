@@ -9,6 +9,10 @@ export interface OsbServiceInstance {
   parameters: Record<string, unknown>;
   context: Record<string, unknown>;
 
+  serviceDefinition: {
+    id: string;
+    name: string;
+  }
   // todo: more fields
 }
 

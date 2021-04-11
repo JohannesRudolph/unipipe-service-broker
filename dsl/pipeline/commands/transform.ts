@@ -1,7 +1,7 @@
-import { path } from "./deps.ts";
-import { write } from "./dir.ts";
-import { InstanceHandler } from "./handler.ts";
-import { readInstance } from "./osb.ts";
+import { path } from "../deps.ts";
+import { write } from "../dir.ts";
+import { InstanceHandler } from "../handler.ts";
+import { readInstance } from "../osb.ts";
 
 interface TransformArgs {
   osbRepoPath: string;
