@@ -35,7 +35,7 @@ init_repo() {
       commit -q --allow-empty -m "init"
 
     # create some bogus branch
-    git checkout -b bogus
+    git checkout -q -b bogus
 
     git \
       -c user.name='test' \
@@ -43,7 +43,7 @@ init_repo() {
       commit -q --allow-empty -m "commit on other branch"
 
     # back to master
-    git checkout master
+    git checkout -q master
 
     # print resulting repo
     pwd
