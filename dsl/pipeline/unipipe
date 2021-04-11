@@ -3,5 +3,4 @@
 set -o errexit
 set -o nounset
 
-deno run --allow-read --allow-write  main.ts "$@"
-
+deno run --allow-read --allow-write  "$(dirname "$0")"/main.ts "$@"
