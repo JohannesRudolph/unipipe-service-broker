@@ -5,7 +5,7 @@ set -e
 source $(dirname $0)/helpers.sh
 
 # use some trickery to get an absolute path to the registry file
-handlers="$(cd "$(dirname "$0")"; pwd)"/handlers/registry.ts
+handlers="$(cd "$(dirname "$0")"; pwd)"/handlers/registry.js
 
 # these are needed so that `tree` output does not confused
 export LC_CTYPE=C 

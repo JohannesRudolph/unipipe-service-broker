@@ -27,10 +27,12 @@ program
 
     console.log(`Loading handlers as default export from module ${args.handlers}.`);
     
-    const handlersModule = await import(
-      args.handlers
-    );
-    const handlers: Record<string, InstanceHandler> = handlersModule.default;
+    const handlersModule = eval(await Deno.readTextFile(args.handlers));
+    // const handlersModule = await import(
+    //   args.handlers
+    // );
+    console.debug(`loaded handler modules`, handlersModule);
+    const handlers: Record<string, InstanceHandler> = handlersModule;
 
     console.debug(`loaded handlers`, handlers);
     
@@ -42,7 +44,7 @@ program
     "status [repo]",
     "Lists service instances status stored in a UniPipe OSB git repo.",
   )
-  .action(async (args: { "repo": string;}) => {
+  .action(async (args: { "repo": string;}) => {    
     await status(args.repo);
   })
   .parse(Deno.args);
