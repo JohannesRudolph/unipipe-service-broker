@@ -1,4 +1,5 @@
 import Denomander from "./deps.ts";
+import { InstanceHandler } from "./handler.ts";
 import { transform } from "./transform.ts";
 
 const program = new Denomander({
@@ -9,19 +10,28 @@ const program = new Denomander({
 
 program
   .command(
-    "transform [repo]",
+    "transform [repo] [handlers]",
     "Transform service instances stored in a UniPipe OSB git repo using the specified handlers",
   )
   .option(
     "-x --xport-repo",
     "Path to the target git repository. If not specified the transform runs in place on the OSB git repo.",
   )
-  .action(async (args: { "repo": string }) => {
+  .action(async (args: { "repo": string; "handlers": string }) => {
     const opts = {
       osbRepoPath: args.repo,
-      outRepoPath: program["xport-repo"] || args.repo,
+      outRepoPath: program["xport-repo"] || args.repo,
     };
 
-    await transform(opts);
+    console.log(`Loading handlers as default export from module ${args.handlers}.`);
+    
+    const handlersModule = await import(
+      args.handlers
+    );
+    const handlers: Record<string, InstanceHandler> = handlersModule.default;
+
+    console.debug(`loaded handlers`, handlers);
+    
+    await transform(opts, handlers);
   })
   .parse(Deno.args);
