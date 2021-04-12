@@ -12,3 +12,10 @@ const OSB_SCHEMA = new YamlSchema({
 export function parse(content: string, options?: yaml.ParseOptions): unknown {
   return yaml.parse(content, options || { schema: OSB_SCHEMA });
 }
+
+export function stringify(
+  obj: Record<string, unknown>,
+  options?: yaml.StringifyOptions,
+): unknown {
+  return yaml.stringify(obj, options);
+}

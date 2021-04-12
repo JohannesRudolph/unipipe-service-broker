@@ -1,13 +1,20 @@
-import Denomander from "./deps.ts";
-import { InstanceHandler } from "./handler.ts";
+import Denomander, { DenomanderOption } from "./deps.ts";
 import { transform, TransformArgs } from "./commands/transform.ts";
 import { status } from "./commands/status.ts";
+import { show, ShowOpts } from "./commands/show.ts";
 
 const program = new Denomander({
   app_name: "UniPipe CLI",
   app_description: "Supercharge your GitOps service pipelines",
   app_version: "0.1.0",
 });
+
+const outputFormat = new DenomanderOption({
+  flags: "-o --output-format",
+  description: "Output format. Supported formats are yaml and json.",
+}); 
+// .choises(["json", "yaml"]);
+// note: unfortunately choises seem to be broken atm.
 
 program
   // transform
@@ -39,5 +46,29 @@ program
   )
   .action(async (args: { "repo": string }) => {
     await status(args.repo);
+  })
+  // show
+  .command(
+    "show [repo]",
+    "Shows the state stored service instance stored in a UniPipe OSB git repo.",
+  )
+  .requiredOption(
+    "-i --instance-id",
+    "Service .",
+  )
+  .addOption(outputFormat)
+  .option(
+    "--pretty",
+    "Pretty print",
+  )
+  .action(async (args: { "repo": string }) => {
+    const opts: ShowOpts = {
+      osbRepoPath: args.repo,
+      instanceId: program["instance-id"],
+      outputFormat: program["output-format"],
+      pretty: program["pretty"]
+    };
+
+    await show(opts);
   })
   .parse(Deno.args);

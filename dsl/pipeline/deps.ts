@@ -13,6 +13,7 @@ export { Schema as YamlSchema } from "https://deno.land/std@0.90.0/encoding/_yam
 
 // 3rd party deps
 import Denomander from "https://deno.land/x/denomander@0.8.1/mod.ts";
+export { Option as DenomanderOption } from "https://deno.land/x/denomander@0.8.1/mod.ts";
 export default Denomander;
 
 export { table } from "https://deno.land/x/minitable@v1.0/mod.ts";

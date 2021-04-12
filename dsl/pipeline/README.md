@@ -75,3 +75,24 @@ Error: Wrong type of function argument
 
 (stdin):1:1
 ```
+
+
+### 
+
+
+## Example ci-cd script
+
+```bash
+# transform to terraform files
+unipipe transform ./osb-repo ./my-handlers.ts
+
+# for each dir 
+  # run tf apply on all terraform modules
+  terraform apply -auto-approve
+
+  unipipe update ./osb-repo $instance-id "procisioning succesfull"
+# 
+
+git commit
+git push
+```
