@@ -17,7 +17,7 @@ run() {
 }
 
 unipipe() {
-  ../pipeline/pipeline "$@"
+  ../pipeline/unipipe "$@"
 }
 
 init_repo() {

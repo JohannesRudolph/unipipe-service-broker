@@ -3,15 +3,46 @@ import { write } from "../dir.ts";
 import { InstanceHandler } from "../handler.ts";
 import { readInstance } from "../osb.ts";
 
-interface TransformArgs {
+export interface TransformArgs {
   osbRepoPath: string;
   outRepoPath: string;
+  handlers: string;
 }
 
+async function loadHandlers(
+  handlerSrc: string,
+): Promise<Record<string, InstanceHandler>> {
+  if (handlerSrc.endsWith(".ts")) {
+    console.log(
+      `Loading handlers as default export from typescript module ${handlerSrc}.`,
+    );
+
+    const handlersModule = await import(handlerSrc);
+
+    console.debug(`loaded handler modules`, handlersModule);
+
+    return handlersModule.default;
+  } else if (handlerSrc.endsWith(".js")) {
+    console.log(
+      `Loading handlers as javascript via eval() from ${handlerSrc}.`,
+    );
+
+    const js = await Deno.readTextFile(handlerSrc);
+    const handlersModule = eval(js);
+
+    console.debug(`loaded handler modules`, handlersModule);
+    return handlersModule;
+  } else {
+    throw Error(
+      "could not land handlers, unsupport handler type (needs to be a '.ts' or '.js' file).",
+    );
+  }
+}
 export async function transform(
   args: TransformArgs,
-  handlers: Record<string, InstanceHandler>,
 ) {
+  const handlers = await loadHandlers(args.handlers);
+
   const instancesPath = path.join(args.osbRepoPath, "instances");
 
   // might be able to "parallelize" using Promise.all

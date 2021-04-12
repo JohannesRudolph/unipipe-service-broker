@@ -1,6 +1,6 @@
 import Denomander from "./deps.ts";
 import { InstanceHandler } from "./handler.ts";
-import { transform } from "./commands/transform.ts";
+import { transform, TransformArgs } from "./commands/transform.ts";
 import { status } from "./commands/status.ts";
 
 const program = new Denomander({
@@ -12,39 +12,32 @@ const program = new Denomander({
 program
   // transform
   .command(
-    "transform [repo] [handlers]",
+    "transform [repo]",
     "Transform service instances stored in a UniPipe OSB git repo using the specified handlers",
+  )
+  .requiredOption(
+    "-h --handlers",
+    "A registry of handlers for processing service instance transformation. These can be defined in either javascript or typescript as a JSON object with service ids as keys and handler objects as values. Note: typescript registries are not supported in single-binary builds of unipipe-cli.",
   )
   .option(
     "-x --xport-repo",
     "Path to the target git repository. If not specified the transform runs in place on the OSB git repo.",
   )
-  .action(async (args: { "repo": string; "handlers": string }) => {
-    const opts = {
+  .action(async (args: { "repo": string }) => {
+    const opts: TransformArgs = {
       osbRepoPath: args.repo,
       outRepoPath: program["xport-repo"] || args.repo,
+      handlers: program["handlers"],
     };
 
-    console.log(`Loading handlers as default export from module ${args.handlers}.`);
-    
-    const handlersModule = eval(await Deno.readTextFile(args.handlers));
-    // const handlersModule = await import(
-    //   args.handlers
-    // );
-    console.debug(`loaded handler modules`, handlersModule);
-    const handlers: Record<string, InstanceHandler> = handlersModule;
-
-    console.debug(`loaded handlers`, handlers);
-    
-    await transform(opts, handlers);
+    await transform(opts);
   })
-
   // status
   .command(
     "status [repo]",
     "Lists service instances status stored in a UniPipe OSB git repo.",
   )
-  .action(async (args: { "repo": string;}) => {    
+  .action(async (args: { "repo": string }) => {
     await status(args.repo);
   })
   .parse(Deno.args);
