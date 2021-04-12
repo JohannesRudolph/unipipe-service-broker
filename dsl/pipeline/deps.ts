@@ -12,8 +12,5 @@ export { Type as YamlType } from "https://deno.land/std@0.90.0/encoding/_yaml/ty
 export { Schema as YamlSchema } from "https://deno.land/std@0.90.0/encoding/_yaml/schema.ts";
 
 // 3rd party deps
-import Denomander from "https://deno.land/x/denomander@0.8.1/mod.ts";
-export { Option as DenomanderOption } from "https://deno.land/x/denomander@0.8.1/mod.ts";
-export default Denomander;
-
+export { Command } from "https://deno.land/x/cmd@v1.2.0/mod.ts";
 export { table } from "https://deno.land/x/minitable@v1.0/mod.ts";

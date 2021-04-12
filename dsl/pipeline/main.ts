@@ -1,74 +1,104 @@
-import Denomander, { DenomanderOption } from "./deps.ts";
+import { Command } from "./deps.ts";
 import { transform, TransformArgs } from "./commands/transform.ts";
-import { status } from "./commands/status.ts";
+import { list } from "./commands/list.ts";
 import { show, ShowOpts } from "./commands/show.ts";
+import { update, UpdateOpts } from "./commands/update.ts";
 
-const program = new Denomander({
-  app_name: "UniPipe CLI",
-  app_description: "Supercharge your GitOps service pipelines",
-  app_version: "0.1.0",
-});
+const program = new Command("UniPipe CLI");
+program.version("0.1.0");
+program.description("Supercharge your GitOps OSB service pipelines");
 
-const outputFormat = new DenomanderOption({
-  flags: "-o --output-format",
-  description: "Output format. Supported formats are yaml and json.",
-}); 
-// .choises(["json", "yaml"]);
-// note: unfortunately choises seem to be broken atm.
-
+// transform
 program
-  // transform
   .command(
-    "transform [repo]",
+    "transform <repo>",
+  )
+  .description(
     "Transform service instances stored in a UniPipe OSB git repo using the specified handlers",
   )
-  .requiredOption(
-    "-h --handlers",
+  .option(
+    "-h --handlers [handlers]",
     "A registry of handlers for processing service instance transformation. These can be defined in either javascript or typescript as a JSON object with service ids as keys and handler objects as values. Note: typescript registries are not supported in single-binary builds of unipipe-cli.",
   )
   .option(
-    "-x --xport-repo",
+    "-x --xport-repo [xport]",
     "Path to the target git repository. If not specified the transform runs in place on the OSB git repo.",
   )
-  .action(async (args: { "repo": string }) => {
+  .action(async (repo: string, options: any) => {
     const opts: TransformArgs = {
-      osbRepoPath: args.repo,
-      outRepoPath: program["xport-repo"] || args.repo,
-      handlers: program["handlers"],
+      osbRepoPath: repo,
+      outRepoPath: options.xport || repo,
+      handlers: options.handlers,
     };
 
     await transform(opts);
-  })
-  // status
-  .command(
-    "status [repo]",
+  });
+
+// list
+program
+  .command("list <repo>")
+  .description(
     "Lists service instances status stored in a UniPipe OSB git repo.",
   )
-  .action(async (args: { "repo": string }) => {
-    await status(args.repo);
-  })
-  // show
-  .command(
-    "show [repo]",
+  .action(async (repo: string) => {
+    await list(repo);
+  });
+
+// show
+program
+  .command("show <repo>")
+  .description(
     "Shows the state stored service instance stored in a UniPipe OSB git repo.",
   )
-  .requiredOption(
-    "-i --instance-id",
-    "Service .",
+  .option(
+    "-i --instance-id <instance-id>",
+    "Service instance id.",
   )
-  .addOption(outputFormat)
+  .option(
+    "-o --output-format <output-format>",
+    "Output format. Supported formats are yaml and json.",
+  )
   .option(
     "--pretty",
     "Pretty print",
   )
-  .action(async (args: { "repo": string }) => {
+  .action(async (repo: string, options: any) => {
     const opts: ShowOpts = {
-      osbRepoPath: args.repo,
-      instanceId: program["instance-id"],
-      outputFormat: program["output-format"],
-      pretty: program["pretty"]
+      osbRepoPath: repo,
+      instanceId: options.instanceId,
+      outputFormat: options.outputFormat,
+      pretty: options.pretty,
     };
 
+    console.log(opts);
+
     await show(opts);
-  })
-  .parse(Deno.args);
+  });
+
+// update
+program
+  .command("update <repo>")
+  .description(
+    "update status of a service instance stored in a UniPipe OSB git repo.",
+  )
+  .option(
+    "-i --instance-id <instance-id>",
+    "Service instance id.",
+  )
+  .option(
+    "--status <status>",
+    "The status. Allowed values are 'in progress', 'succeeded' and 'failed'.",
+  ) // todo use choices instead
+  .option("--description [description]", "Service Instance status description text.")
+  .action(async (repo: string, options: Record<string, any>) => {
+    const opts: UpdateOpts = {
+      osbRepoPath: repo,
+      instanceId: options.instanceId,
+      status: options.status,
+      description: options.description || "",
+    };
+
+    await update(opts);
+  });
+
+await program.parseAsync(Deno.args);

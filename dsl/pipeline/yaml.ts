@@ -16,6 +16,6 @@ export function parse(content: string, options?: yaml.ParseOptions): unknown {
 export function stringify(
   obj: Record<string, unknown>,
   options?: yaml.StringifyOptions,
-): unknown {
+): string {
   return yaml.stringify(obj, options);
 }

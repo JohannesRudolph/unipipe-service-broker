@@ -1,9 +1,7 @@
 import { path, table } from "../deps.ts";
 import { readInstance } from "../osb.ts";
 
-
-
-export async function status(
+export async function list(
   osbRepoPath: string,
 ) {
   const instancesPath = path.join(osbRepoPath, "instances");
@@ -26,5 +24,5 @@ export async function status(
     });    
   }
 
-  console.log(table(results, ['id', 'type', 'service', 'status']));
+  console.log(table(results, ['id', 'type', 'service', 'list']));
 }

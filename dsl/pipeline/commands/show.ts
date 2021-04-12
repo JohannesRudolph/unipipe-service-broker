@@ -19,7 +19,6 @@ export async function show(opts: ShowOpts) {
 
   if (opts.outputFormat === "json") {
     const p = opts.pretty ? 4 : undefined;
-
     console.log(JSON.stringify(instance, null, p));
   } else if (opts.outputFormat === "yaml") {
     const p = opts.pretty ? { indent: 4 } : {};
