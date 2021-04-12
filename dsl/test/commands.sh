@@ -41,7 +41,9 @@ it_can_update() {
   
   local ref=$(make_commit_with_all_changes "$repo_osb")
   
-  unipipe update -i "49c96fa5-46cc-4334-a718-378ceed2de81" --status "failed" --description "all going fine" "$repo_osb"
+  unipipe update -i "49c96fa5-46cc-4334-a718-378ceed2de81" --status "failed" --description "all is fine!" "$repo_osb"
+
+  cat "$repo_osb"/instances/49c96fa5-46cc-4334-a718-378ceed2de81/status.yml  
 }
 
 
