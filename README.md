@@ -38,7 +38,7 @@ Prerequisite:
 - Install dhall and dhall-to-yaml, you can find details [here](https://docs.dhall-lang.org/tutorials/Getting-started_Generate-JSON-or-YAML.html#installation).
 
 The properties mentioned in the configuration section above can be configured in the file 
-`dsl/config/AppConfig.dhall`
+`cli/config/AppConfig.dhall`
 
 Example configuration to access git through ssh
 
@@ -74,7 +74,7 @@ let ExampleHttps
 in ExampleHttps
 ```
 
-After configuring the properties, execute the shell script `dsl/config/run.sh`. This will create an `application-default.yml` file in the resources folder of source.
+After configuring the properties, execute the shell script `cli/config/run.sh`. This will create an `application-default.yml` file in the resources folder of source.
 
 ```bash
 ./run.sh
