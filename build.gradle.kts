@@ -1,11 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
-  id("org.springframework.boot") version "2.4.6"
-  id("io.spring.dependency-management") version "1.0.11.RELEASE"
-
   kotlin("jvm") version "1.5.0"
   kotlin("plugin.spring") version "1.5.0"
+
+  id("org.springframework.boot") version "2.4.6"
+  id("io.spring.dependency-management") version "1.0.11.RELEASE"
 
   id("eclipse")
 }
@@ -53,6 +54,23 @@ tasks.withType<Test> {
   useJUnit()
 }
 
-tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
-  launchScript()
+tasks.getByName<BootBuildImage>("bootBuildImage") {
+  // apply some tunings so we can run the image within 384M of memory
+  environment = mapOf(
+      "BPL_SPRING_CLOUD_BINDINGS_ENABLED" to "false", // not needed
+
+      // note: we use the https://github.com/paketo-buildpacks/environment-variables buildpack
+      // to fixate some environment variables in the docker image. There may be a better approach
+      // that still allows consumers of the image to override the settings themselves, but this works for now
+      // see also https://stackoverflow.com/a/66909132/125407
+
+      "BPE_OVERRIDE_JAVA_TOOL_OPTIONS" to "-XX:ReservedCodeCacheSize=120M",
+
+      // reduce number of threads so we reserve less memory and can run in smaller containers
+      // we need little concurrency, so this number of threads should be more than sufficient
+      // "BPL_JVM_THREAD_COUNT" to "25" -> does not work
+      "BPE_OVERRIDE_BPL_JVM_THREAD_COUNT" to "25"
+
+
+  )
 }
