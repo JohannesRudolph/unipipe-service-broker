@@ -13,7 +13,7 @@ class GenericCatalogService(
     private val contextFactory: GitOperationContextFactory
 ) : CatalogService {
 
-  private lateinit var cachedCatalog: Catalog
+  private var cachedCatalog: Catalog
 
   init {
     contextFactory.acquireContext().use { context ->
